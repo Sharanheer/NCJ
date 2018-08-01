@@ -1,0 +1,12 @@
+.Footer{
+    margin: auto;
+    padding: auto;
+    width: 100%;
+    height: 200px;
+    background-color: #CCC; 
+    bottom: 0;
+}
+
+.Footer h3{
+    padding: 80px;
+}

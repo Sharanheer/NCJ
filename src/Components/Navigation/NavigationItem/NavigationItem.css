@@ -1,0 +1,9 @@
+.NavigationItem{
+    display: block;
+    margin: 15px;
+    list-style-type: none;
+    color: white;
+    padding: 0 10px;
+    align-items: center;
+}
+
