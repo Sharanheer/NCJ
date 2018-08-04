@@ -7,13 +7,13 @@ const navigation = () => {
     return (
         <nav className="Navigation">
             <ul>
-                <NavigationItem >Home </NavigationItem>
-                <NavigationItem >About</NavigationItem>
+                <NavigationItem Link="/">Home </NavigationItem>
+                <NavigationItem Link="/about">About</NavigationItem>
             </ul> 
             
             <li style={{ margin: 'auto' ,listStyleType: 'none', color: 'gold', display: 'block'}}>NCJ</li>
-            <NavigationItem >Users</NavigationItem>
-            <NavigationItem >Contact</NavigationItem>  
+            <NavigationItem Link="/users">Users</NavigationItem>
+            <NavigationItem Link="/contact">Contact</NavigationItem>  
             
         </nav>    
     );

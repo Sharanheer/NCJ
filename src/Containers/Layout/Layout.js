@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './Layout.css';
 import Navigation from '../../Components/Navigation/Navigation';
-import Home from '../Home/Home';
+import Footer from '../../Components/Footer/Footer';
 
 class Layout extends Component{
     render(){
@@ -10,8 +10,8 @@ class Layout extends Component{
             <div className="Layout">
                 <Navigation />
                 {/* Router */}
-                <Home />
-                
+                {this.props.children}
+                <Footer />
             </div>    
         );
     }

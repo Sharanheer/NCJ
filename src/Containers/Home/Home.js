@@ -2,55 +2,85 @@ import React, { Component } from 'react';
 
 import './Home.css';
 import Category from '../../Components/Category/Category';
-import Footer from '../../Components/Footer/Footer';
 import Modal from '../../Components/Modal/Modal';
+import axios from 'axios';
 
 class Home extends Component{
 
     state = {
-        gold : {
-            'Necklace': 'http://stat.homeshop18.com/homeshop18/images/productImages/744/kundan-necklace-set-by-sia-jewellery-nset-004-large_7d9c8daad6a5c33484e9d0517d97c6d6.jpg', 
-            'Ring': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF_ET7A8yomKZLEk2HibF5RgRjte0-onh2d1yNF9d9xen6lA_mdQ',
-            'Bangle': 'https://i.pinimg.com/originals/28/79/85/287985b8816a0b11600a64863751ce46.jpg',
-            'Chain': 'https://cdn.shopify.com/s/files/1/1716/4103/products/product-image-206765356_480x480.jpg?v=1522191152',
-            'Earring': 'https://images-na.ssl-images-amazon.com/images/I/41xGGMNCY9L.jpg',
-            'Braclet': 'https://www.pagoda.com/productimages/processed/V-19988177_0_565.jpg',
-            'BajuBund': 'https://images-cdn.azureedge.net/azure/in-resources/d7048855-742a-406c-a67d-5c2962e69e5e/Images/ProductImages/Source/BJB410199_1.jpg;width=1000;height=1000;scale=canvas;anchor=bottomcenter',
-            'Mangalsutra': 'https://www.papilior.com/assets/product_images/340x340/8/indrani-gold-mangalsutra.jpg'
-        },
-        silver: {},
-        diamond: {},
-        necklace: {
-            '1': 'https://3.imimg.com/data3/VG/XU/MY-9544961/gold-nacklace-set-500x500.png', 
-            '2': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSF_ET7A8yomKZLEk2HibF5RgRjte0-onh2d1yNF9d9xen6lA_mdQ',
-            '3': 'https://i.pinimg.com/originals/28/79/85/287985b8816a0b11600a64863751ce46.jpg',
-            '4': 'https://cdn.shopify.com/s/files/1/1716/4103/products/product-image-206765356_480x480.jpg?v=1522191152',
-            '5': 'https://images-na.ssl-images-amazon.com/images/I/41xGGMNCY9L.jpg',
-            '6': 'https://www.pagoda.com/productimages/processed/V-19988177_0_565.jpg',
-            '7': 'https://images-cdn.azureedge.net/azure/in-resources/d7048855-742a-406c-a67d-5c2962e69e5e/Images/ProductImages/Source/BJB410199_1.jpg;width=1000;height=1000;scale=canvas;anchor=bottomcenter',
-            '8': 'https://www.papilior.com/assets/product_images/340x340/8/indrani-gold-mangalsutra.jpg'
-        },
-        selectedCategory: 'gold',
+        category: null,
+        subCategory: null,
+        selectedCategory: null,
         showLabel: true,
         imageLink: null,
         imageId: null,
-        showModal: false
+        showModal: false,
+        categoryArr: null
     }
 
-    selectCategoryHandler = (selectorId) => {
-        this.setState({
-            selectedCategory: selectorId,
-            showLabel: true,
-            showModal: false
-        })
+    componentDidMount(){
+        axios.get('https://app-ncj.firebaseio.com/.json')
+            .then( res => {
+                // console.log(res.data);
+                let categoryArr = [];
+                for(let key in res.data){
+                    categoryArr.push(key);
+                }
+                this.setState({ category: categoryArr});
+
+                //Setting default Condition
+                this.selectCategoryHandler(this.state.category[0]);
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
-    subCategoryHandler = (subCategoryId, subCategoryLink) => {
-        this.setState({
-            selectedCategory: subCategoryId,
-            showLabel: false,
-            showModal: false
-        })
+    selectCategoryHandler = (categoryName) => {
+            
+            axios.get('https://app-ncj.firebaseio.com/'+categoryName+'.json')
+                .then( res => {
+                    let subCategory = [];
+                    for(let key in res.data){
+                        let subCategoryName = key;
+                        for(let keys in res.data[key]){
+                            let subCategoryImg = res.data[key][keys]['link'];
+                            subCategory.push({ [subCategoryName]: subCategoryImg})
+                            break;
+                        }
+                    }
+                    this.setState({
+                        subCategory: subCategory,
+                        selectedCategory: categoryName,
+                        showLabel: true,
+                        showModal: false
+                    });
+                })
+                .catch( err => {
+                    console.log('Error:' , err);
+                });
+    }
+
+    subCategoryHandler = (subCategory, subCategoryLink) => {
+
+        axios.get('https://app-ncj.firebaseio.com/'+this.state.selectedCategory+ '/'+ subCategory +'.json')
+            .then( res => {
+                let subCategoryImages = [];
+                for(let key in res.data){
+                    let subCategoryName = key;
+                    let subCategoryImg = res.data[key]['link'];
+                    subCategoryImages.push({ [subCategoryName]: subCategoryImg})
+                }
+                this.setState({
+                    subCategory: subCategoryImages,
+                    selectedCategory: subCategory,
+                    showLabel: false,
+                    showModal: false
+                });
+            })
+            .catch( err => {
+                console.log( 'Error :', err);
+            });
     }
 
     openImageHandler = (imageId, imageLink) => {
@@ -69,39 +99,54 @@ class Home extends Component{
         });
     }
 
+    likeClickHandler = (category, imageId) => {
+        //Check if user is logged In
+        //Add an entry into the database with category, subcategory, imageid, imageLink, userid
+        if(category === 'Necklace'){
+            const updatedCategory = {...this.state[category]};
+            const updatedSubCategory = {...updatedCategory[imageId]};
+            updatedSubCategory.liked = !updatedSubCategory.liked;
+            updatedCategory[imageId] = updatedSubCategory;
+            this.setState({ 
+                Necklace : updatedCategory
+            });
+        }
+    }
+
     render(){
+
+        //Creation of buttons based on category fetched from the database
+        let buttonArray = [];
+        if(this.state.category){
+            for(let i=0; i< this.state.category.length; i++){
+                buttonArray.push(<button key={i} onClick={() => this.selectCategoryHandler(this.state.category[i])}>{this.state.category[i]}</button>);      
+            }
+        }
+
+        //Creation of subCategory based on the selected category and data fetched from the database
+        let category = null;
+        if(this.state.subCategory){
+            category = (<Category 
+                            subCategory={this.state.subCategory}
+                            selectedCategory={this.state.selectedCategory} 
+                            showLabel={this.state.showLabel}
+                            subCategoryHandler={ this.state.category.includes(this.state.selectedCategory) ? this.subCategoryHandler : this.openImageHandler}
+                        />  );
+        }
 
         let modal = null;
         if(this.state.showModal){
             modal = <Modal imageLink={this.state.imageLink} imageId={this.state.imageId} modalCancel={this.modalCancelHandler}/>;
         }
 
-        let selectedCategoryList = this.state.gold;
-        if(this.state.selectedCategory === 'silver')
-            selectedCategoryList = this.state.silver;
-        else if(this.state.selectedCategory === 'diamond')
-            selectedCategoryList = this.state.diamond;
-        else if(this.state.selectedCategory === 'Necklace')
-            selectedCategoryList = this.state.necklace;
         return (
             <div>
             {modal}
             <div>
-                {/* Buttons Gold, Silver, Diamond
-                Icons for displaying different categories */}
                 <div className="category">
-                    <button onClick={() => this.selectCategoryHandler('gold')}>GOLD</button>
-                    <button onClick={() => this.selectCategoryHandler('silver')}>SILVER</button>
-                    <button onClick={() => this.selectCategoryHandler('diamond')}>DIAMOND</button>
+                    {buttonArray}
                 </div>  
-                <Category 
-                    selectedCategory={this.state.selectedCategory} 
-                    selectedCategoryList={selectedCategoryList}
-                    showLabel={this.state.showLabel}
-                    subCategory={ (this.state.selectedCategory === 'gold' | 
-                    this.state.selectedCategory === 'silver' | 
-                    this.state.selectedCategory === 'diamond') ? this.subCategoryHandler : this.openImageHandler}/>  
-                <Footer />
+                {category}
             </div>    
          </div>
         );

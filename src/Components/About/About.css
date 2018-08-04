@@ -1,0 +1,15 @@
+.About{
+    height: 250px;
+    width: 100%;
+    color: black;
+    align-items: center;
+}
+ .About h3{
+     height: 100%;
+     width: 100%;
+     align-items: center;
+     color: red;
+     z-index: 5;
+     margin: 50px 0;
+     padding: 20px 0;
+ }

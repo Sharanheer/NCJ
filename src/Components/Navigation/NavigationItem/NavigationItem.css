@@ -3,7 +3,18 @@
     margin: 15px;
     list-style-type: none;
     color: white;
-    padding: 0 10px;
+    padding: 10px;
     align-items: center;
+}
+
+.inactive{
+    color: white;
+    text-decoration: none;
+}
+
+.active{
+
+    color: rgb(180, 101, 101);
+    text-decoration: none;
 }
 
