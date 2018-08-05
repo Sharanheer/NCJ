@@ -10,12 +10,12 @@ class Home extends Component{
     state = {
         category: null,
         subCategory: null,
+        previousCategory: null,
         selectedCategory: null,
         showLabel: true,
+        showModal: false,
         imageLink: null,
         imageId: null,
-        showModal: false,
-        categoryArr: null
     }
 
     componentDidMount(){
@@ -49,9 +49,11 @@ class Home extends Component{
                             break;
                         }
                     }
+                    let previousCategory = this.state.previousCategory;
                     this.setState({
                         subCategory: subCategory,
                         selectedCategory: categoryName,
+                        previousCategory: previousCategory,
                         showLabel: true,
                         showModal: false
                     });
@@ -69,11 +71,15 @@ class Home extends Component{
                 for(let key in res.data){
                     let subCategoryName = key;
                     let subCategoryImg = res.data[key]['link'];
-                    subCategoryImages.push({ [subCategoryName]: subCategoryImg})
+                    let heart = res.data[key]['heart'];
+                    // console.log('heart :', heart);
+                    subCategoryImages.push({ [subCategoryName]: subCategoryImg, 'heart' : heart })
                 }
+                let previousCategory = this.state.selectedCategory;
                 this.setState({
                     subCategory: subCategoryImages,
                     selectedCategory: subCategory,
+                    previousCategory: previousCategory,
                     showLabel: false,
                     showModal: false
                 });
@@ -84,7 +90,6 @@ class Home extends Component{
     }
 
     openImageHandler = (imageId, imageLink) => {
-        
         //Code to expand the image
         this.setState({
             showModal: true,
@@ -99,18 +104,24 @@ class Home extends Component{
         });
     }
 
-    likeClickHandler = (category, imageId) => {
+    likeClickHandler = (imageId) => {
         //Check if user is logged In
-        //Add an entry into the database with category, subcategory, imageid, imageLink, userid
-        if(category === 'Necklace'){
-            const updatedCategory = {...this.state[category]};
-            const updatedSubCategory = {...updatedCategory[imageId]};
-            updatedSubCategory.liked = !updatedSubCategory.liked;
-            updatedCategory[imageId] = updatedSubCategory;
-            this.setState({ 
-                Necklace : updatedCategory
-            });
-        }
+        //Add an entry into the database with this.state.category, this.state.subcategory, imageid, optional: {imageLink}, userid
+
+        //Also update the local subcategory array
+        let updatedSubCategory = this.state.subCategory.map(obj => {
+            for(let key in obj){
+                if(key === imageId){
+                    return Object.assign({}, obj, { heart: !obj['heart'] });
+                }
+                else{
+                    return Object.assign({}, obj);
+                }
+            }
+        });
+        this.setState({ subCategory: updatedSubCategory});
+        // console.log('updatedSubCategory :', updatedSubCategory);
+        // console.log('this.state.subCategory :', this.state.subCategory);
     }
 
     render(){
@@ -131,6 +142,7 @@ class Home extends Component{
                             selectedCategory={this.state.selectedCategory} 
                             showLabel={this.state.showLabel}
                             subCategoryHandler={ this.state.category.includes(this.state.selectedCategory) ? this.subCategoryHandler : this.openImageHandler}
+                            likeClickHandler={this.likeClickHandler}
                         />  );
         }
 

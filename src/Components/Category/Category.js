@@ -21,13 +21,16 @@ const category = (props) => {
     for(let i=0; i < props.subCategory.length; i++){
         for(let keys in props.subCategory[i]){
             categoryList.push(<CategoryItem 
-            key={keys} 
-            add={props.subCategory[i][keys]} 
-            selectedCategory={props.selectedCategory}
-            subCategoryHandler={props.subCategoryHandler} 
-            categoryName={keys}
-            showLabel={props.showLabel}
+                key={keys} 
+                add={props.subCategory[i][keys]} 
+                selectedCategory={props.selectedCategory}
+                subCategoryHandler={props.subCategoryHandler} 
+                categoryName={keys}
+                showLabel={props.showLabel}
+                liked={props.subCategory[i]['heart']} 
+                likeClicked={props.likeClickHandler}
             />);
+            break;
         }
     }
     
