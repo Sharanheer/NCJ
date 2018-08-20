@@ -1,15 +1,23 @@
 .About{
-    height: 250px;
+    height: 490px;
     width: 100%;
     color: black;
     align-items: center;
+    background-image: url();
 }
- .About h3{
-     height: 100%;
-     width: 100%;
-     align-items: center;
-     color: red;
-     z-index: 5;
-     margin: 50px 0;
-     padding: 20px 0;
- }
+ .About h2{
+    height: 10%;
+    width: 100%;
+    align-items: center;
+    color: goldenrod;
+    margin-top: 50px;
+    padding-top: 50px;
+ } 
+ .About p{
+    height: 1%;
+    width: 100%;
+    align-items: center;
+    color: rgb(202, 150, 18);
+    margin: 0 0;
+    padding: 1px 0;
+} 

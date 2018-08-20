@@ -6,9 +6,10 @@ const about = () => {
     console.log('Inside About');
     return (
         <div className="About">
-            <h3>About NCJ</h3>
+            <h2>Our Mission</h2>
+            <p>From past 40 years we have been delivering unique products and designs which provide a personalized ornament to all of our customers.</p>
         </div>
     );
 }
 
-export default about;
+export default about; 

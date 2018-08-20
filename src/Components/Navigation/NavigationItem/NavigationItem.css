@@ -2,17 +2,17 @@
     display: block;
     margin: 15px;
     list-style-type: none;
-    color: white;
+    color: goldenrod;
     padding: 10px;
     align-items: center;
 }
 
 .inactive{
-    color: white;
+    color: goldenrod;
     text-decoration: none;
 }
 
-.active{
+.activeLink{
 
     color: rgb(180, 101, 101);
     text-decoration: none;

@@ -10,6 +10,7 @@
     list-style: none;      
 }
 
+
 .category button{
     border: solid 2px #333;
     margin: 10px;
@@ -17,4 +18,22 @@
     padding: 5px;
     cursor: pointer;
 }
+
+.category button:hover{
+    border: solid 2px #333;
+    margin: 10px;
+    width: 100px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: rgb(224, 170, 33);
+}
+
+/* .category button:a{
+    border: solid 2px rgb(233, 12, 12);
+    margin: 10px;
+    width: 100px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: rgb(233, 72, 8);
+} */
 

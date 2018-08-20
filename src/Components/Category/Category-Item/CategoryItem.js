@@ -4,7 +4,6 @@ import './CategoryItem.css';
 import Ionicon from 'react-ionicons';
 
 const categoryItem = (props) => {
-
     
     let label = null;
     if(props.showLabel){
@@ -12,9 +11,9 @@ const categoryItem = (props) => {
     }
     let icon = null;
     if(!props.showLabel){
-        icon = <Ionicon className="heart" icon="md-heart-outline" fontSize="35px" onClick={() => props.likeClicked(props.categoryName)} color="red"/>;
+        icon = <Ionicon className="heart" icon="md-heart-outline" fontSize="35px" onClick={() => props.likeClicked(props.categoryName, props.add, true)} color="red"/>;
         if(props.liked)
-            icon = <Ionicon className="heart" icon="md-heart" fontSize="35px" onClick={() => props.likeClicked(props.categoryName)} color="red"/>;
+            icon = <Ionicon className="heart" icon="md-heart" fontSize="35px" onClick={() => props.likeClicked(props.categoryName, props.add, false)} color="red"/>;
     }
     return(
         <div className="CategoryItem">
